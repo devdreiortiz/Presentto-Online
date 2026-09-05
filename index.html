@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú Digital & Pedidos | Restaurante Demo - Powered by Presentto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text-main: #171717;
+      --text-muted: #4d4d4d;
+      --border-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+      --card-shadow: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px;
+      --accent: #171717;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Geist', sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.5; }
+
+    .header-resto {
+      background: var(--surface);
+      border-bottom: 1px solid #ebebeb;
+      padding: 24px;
+      text-align: center;
+    }
+    .header-resto h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.96px; }
+    .header-resto p { font-size: 14px; color: var(--text-muted); }
+
+    .container { max-width: 800px; margin: 24px auto; padding: 0 16px; }
+    
+    .category-title { font-size: 18px; font-weight: 600; margin: 24px 0 12px 0; letter-spacing: -0.5px; }
+
+    .dish-card {
+      background: var(--surface);
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .dish-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .dish-info .desc { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .dish-info .prep { font-size: 12px; font-family: 'Geist Mono', monospace; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+    .dish-price { font-size: 16px; font-weight: 600; white-space: nowrap; margin-bottom: 8px; }
+    
+    .btn-add {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-add:hover { background: #333; }
+
+    /* Floating Cart Bar */
+    .cart-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #171717;
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .cart-bar.active { transform: translateY(0); }
+    .cart-bar button {
+      background: #fff;
+      color: #171717;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal {
+      background: #fff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+    .form-group select, .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ebebeb;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .btn-submit {
+      width: 100%;
+      background: #171717;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-resto">
+    <h1>Restaurante El Fogón Demo</h1>
+    <p>Menú interactivo inteligente — Powered by Presentto</p>
+  </div>
+
+  <div class="container">
+    <div class="category-title">🍔 Platos Principales</div>
+
+    <div class="dish-card">
+      <div class="dish-info">
+        <h3>Hamburguesa Artesanal Clásica</h3>
+        <p class="desc">Carne 150g angus, queso cheddar fundido, tocino crujiente, lechuga, tomate y salsa de la casa.</p>
+        <span class="prep">Preparación: 15 min</span>
+      </div>
+      <div style="text-align: right;">
+        <div class="dish-price">$ 28.000</div>
+        <button class="btn-add" onclick="addItem('Hamburguesa Artesanal Clásica', 28000)">Pedir</button>
+      </div>
+    </div>
+
+    <div class="dish-card">
+      <div class="dish-info">
+        <h3>Pizza Margarita a la Leña</h3>
+        <p class="desc">Masa madre fermentada 48h, salsa de tomate artesanal, mozzarella fresca y albahaca orgánica.</p>
+        <span class="prep">Preparación: 18 min</span>
+      </div>
+      <div style="text-align: right;">
+        <div class="dish-price">$ 34.000</div>
+        <button class="btn-add" onclick="addItem('Pizza Margarita a la Leña', 34000)">Pedir</button>
+      </div>
+    </div>
+
+    <div class="category-title">🥤 Bebidas & Cocteles</div>
+
+    <div class="dish-card">
+      <div class="dish-info">
+        <h3>Limonada de Coco Creador</h3>
+        <p class="desc">Refrescanteizado natural con crema de coco, zumo de limón fresco y leche condensada.</p>
+        <span class="prep">Preparación: 5 min</span>
+      </div>
+      <div style="text-align: right;">
+        <div class="dish-price">$ 9.000</div>
+        <button class="btn-add" onclick="addItem('Limonada de Coco', 9000)">Pedir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Cart -->
+  <div class="cart-bar" id="cartBar">
+    <div>
+      <span id="cartCount">0</span> items seleccionados | Total: <strong id="cartTotal">$0</strong>
+    </div>
+    <button onclick="openModal()">Finalizar Pedido</button>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal">
+      <h2>Finalizar tu Pedido</h2>
+      
+      <!-- Formspree Endpoint Form -->
+      <form id="orderForm" action="https://formspree.io/f/tu-formspree-id" method="POST" onsubmit="submitOrder(event)">
+        <div class="form-group">
+          <label>¿Dónde te encuentras?</label>
+          <select id="locationType" name="Ubicacion" onchange="toggleLocationFields()" required>
+            <option value="">Selecciona una opción...</option>
+            <option value="Sede Fisica">En la sede física (Restaurante)</option>
+            <option value="Domicilio">A domicilio (En casa)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="tableGroup" style="display: none;">
+          <label>Número de Mesa</label>
+          <input type="text" name="Mesa" placeholder="Ej. Mesa 4">
+        </div>
+
+        <div class="form-group" id="addressGroup" style="display: none;">
+          <label>Dirección de Entrega</label>
+          <input type="text" name="Direccion" placeholder="Calle 10 # 20-30, Barrio...">
+        </div>
+
+        <div class="form-group">
+          <label>Tu Nombre / Contacto</label>
+          <input type="text" name="Cliente" placeholder="Nombre y Teléfono" required>
+        </div>
+
+        <div class="form-group">
+          <label>Detalle del Pedido</label>
+          <textarea id="orderDetails" name="Pedido" rows="4" readonly></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Comanda Instantánea</button>
+        <button type="button" onclick="closeModal()" style="width: 100%; background: none; border: none; padding: 8px; margin-top: 8px; cursor: pointer; color: #666;">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function addItem(name, price) {
+      cart.push({ name, price });
+      updateCart();
+    }
+
+    function updateCart() {
+      const count = cart.length;
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('cartCount').innerText = count;
+      document.getElementById('cartTotal').innerText = '$ ' + total.toLocaleString();
+      
+      const bar = document.getElementById('cartBar');
+      if (count > 0) {
+        bar.classList.add('active');
+      } else {
+        bar.classList.remove('active');
+      }
+    }
+
+    function openModal() {
+      if (cart.length === 0) return;
+      const details = cart.map(i => `${i.name} ($${i.price.toLocaleString()})`).join('\n');
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('orderDetails').value = `${details}\n\nTOTAL: $${total.toLocaleString()}`;
+      document.getElementById('checkoutModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('checkoutModal').style.display = 'none';
+    }
+
+    function toggleLocationFields() {
+      const type = document.getElementById('locationType').value;
+      const tableGroup = document.getElementById('tableGroup');
+      const addressGroup = document.getElementById('addressGroup');
+
+      if (type === 'Sede Fisica') {
+        tableGroup.style.display = 'block';
+        addressGroup.style.display = 'none';
+      } else if (type === 'Domicilio') {
+        tableGroup.style.display = 'none';
+        addressGroup.style.display = 'block';
+      } else {
+        tableGroup.style.display = 'none';
+        addressGroup.style.display = 'none';
+      }
+    }
+
+    function submitOrder(e) {
+      alert('¡Comanda generada con éxito! En producción esto se envía instantáneamente a Formspree y al PC de caja del restaurante.');
+      closeModal();
+      cart = [];
+      updateCart();
+      e.preventDefault();
+    }
+  </script>
+</body>
+</html>
