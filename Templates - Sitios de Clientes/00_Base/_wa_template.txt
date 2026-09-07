@@ -1,0 +1,11 @@
+// ===== WhatsApp Centralizado =====
+const WA_NUMBER = 'PASTE_NUMBER_HERE';
+const WA_MSG = 'PASTE_MSG_HERE';
+const WA_URL = 'https://wa.me/' + WA_NUMBER + '?text=' + WA_MSG;
+
+document.addEventListener('DOMContentLoaded', function() {
+    var waLinks = document.querySelectorAll('a[href*="wa.me"]');
+    for (var i = 0; i < waLinks.length; i++) {
+        waLinks[i].href = WA_URL;
+    }
+});
